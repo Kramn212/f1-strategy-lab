@@ -1,140 +1,30 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>F1 Data Lab: Race Strategy Analytics</title>
-<link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#15151e;--bg2:#1f1f2b;--red:#e10600;--mut:#949498;--line:#38383f}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:130px}
-body{margin:0;background:#000;color:#fff;font:400 16px/1.55 'Titillium Web',system-ui,sans-serif}
-h1,h2,h3,.disp{font-family:Unbounded,sans-serif;font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:1.08;margin:0}
-.top{position:sticky;top:0;z-index:20;background:var(--bg) repeating-linear-gradient(115deg,transparent 0 90px,rgba(255,255,255,.045) 90px 150px)}
-.nav{display:flex;align-items:center;gap:28px;padding:14px 5vw;overflow-x:auto;white-space:nowrap}
-.logo{background:var(--red);transform:skewX(-14deg);padding:5px 16px;margin-right:8px}.logo span{display:block;transform:skewX(14deg);font:900 15px Unbounded;letter-spacing:-.02em}
-.nav a{color:#fff;text-decoration:none;font-weight:600}.nav a:hover{color:var(--red)}
-.sub{background:#000;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;padding:9px 5vw;font-size:14px;flex-wrap:wrap}
-.sub b{font-weight:700}.pill{border-radius:99px;padding:1px 12px;font-weight:700;font-size:13px;background:#1d4d2b;color:#6dffa0}.pill.demo{background:#4a3200;color:#ffc94d}
-.bars i{display:block;height:14px;background:var(--red);clip-path:polygon(0 0,100% 0,calc(100% - 24px) 100%,0 100%);margin-bottom:6px}.bars i+i{height:8px;margin-bottom:0}
-.hero{padding:44px 5vw 30px;background:radial-gradient(700px 300px at 90% 0,rgba(225,6,0,.28),transparent)}
-.hero h1{font-size:clamp(34px,7vw,88px);margin:26px 0 14px}.hero p{max-width:680px;color:#cfcfd4;font-size:18px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;padding:0 5vw 40px}
-.kpi{background:var(--bg);border-radius:14px;padding:16px 18px;border-top:3px solid var(--red)}.kpi span{color:var(--mut);font-size:13px;text-transform:uppercase;letter-spacing:.08em}.kpi b{display:block;font:900 30px Unbounded}
-.sec{padding:56px 5vw}.sec.alt{background:var(--bg)}.sec>h2{font-size:clamp(26px,4.2vw,46px);margin-bottom:8px}.lead{color:#cfcfd4;max-width:720px;margin:0 0 22px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr));gap:18px}
-.card{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:20px}.alt .card{background:#000}.card h3{font-size:16px;margin-bottom:12px}
-.box{position:relative;height:330px}.take{margin:12px 0 0;color:#cfcfd4;border-left:3px solid var(--red);padding-left:12px}
-.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.chip{display:flex;gap:8px;align-items:center;border:1px solid var(--line);background:var(--bg2);color:#fff;border-radius:99px;padding:5px 14px 5px 6px;cursor:pointer;font:600 14px 'Titillium Web'}.chip.off{opacity:.35}
-.tyre{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;border:3px solid var(--c);font:900 10px Unbounded;color:#fff;flex:none}
-.row{display:grid;grid-template-columns:28px 8px 1.3fr 2fr 64px 70px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
-.row i{height:26px;border-radius:2px}.row .bar{height:8px;background:var(--bg2);border-radius:9px}.row u{display:block;height:8px;border-radius:9px}.row small{color:var(--mut)}
-.btn{background:var(--red);color:#fff;border:0;border-radius:99px;padding:10px 22px;font:700 15px 'Titillium Web';cursor:pointer}.btn.ghost{background:transparent;border:1px solid #fff;margin-top:14px}
-.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}label{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
-input,select{width:100%;background:var(--bg2);color:#fff;border:1px solid var(--line);border-radius:8px;padding:8px;font:600 15px 'Titillium Web'}
-.res{font:900 22px Unbounded;margin:6px 0}.warn{color:#ffc94d}table{width:100%;border-collapse:collapse}td,th{padding:8px 6px;text-align:left;border-bottom:1px solid var(--line)}th{color:var(--mut);font-size:12px;text-transform:uppercase}
-.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0}.step{background:var(--bg2);padding:18px 22px 18px 26px;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 50%,calc(100% - 18px) 100%,0 100%,18px 50%);margin-right:-10px;min-height:150px}
-.step b{font:900 13px Unbounded;color:var(--red)}.step h3{font-size:15px;margin:6px 0}.step p{font-size:14px;color:#cfcfd4;margin:0}
-.q{height:18px;border-radius:9px;overflow:hidden;display:flex;background:#2a2a36;margin:10px 0}.q i{background:var(--red)}.q u{background:#34c759}
-.check{height:18px;background:conic-gradient(#fff 25%,#222 0 50%,#fff 0 75%,#222 0) 0 0/18px 18px}
-footer{background:#000;padding:40px 5vw 30px}footer .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin:30px 0}footer h3{font-size:14px;margin-bottom:10px}footer a,footer p{color:var(--mut);font-size:14px;text-decoration:none;display:block;margin:4px 0}footer a:hover{color:#fff}
-@media(max-width:700px){.row{grid-template-columns:24px 6px 1fr 60px}.row .bar,.row small{display:none}.step{clip-path:none;margin:0 0 8px}}
-.hero{background:linear-gradient(90deg,#000 38%,rgba(0,0,0,.3)),url(images/hero.jpg) center/cover,radial-gradient(700px 320px at 85% 10%,rgba(225,6,0,.32),#000)}
-.hero-in{display:grid;grid-template-columns:1.05fr 1fr;gap:24px;align-items:center}.art svg{width:100%;height:auto;filter:drop-shadow(0 18px 28px rgba(225,6,0,.3))}
-.spin{transform-box:fill-box;transform-origin:center;animation:sp 1.1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}.lines line{animation:sl .8s linear infinite}@keyframes sl{to{stroke-dashoffset:-60}}
-@media(prefers-reduced-motion:reduce){.spin,.lines line{animation:none}}
-.sec{position:relative;overflow:hidden}.deco{position:absolute;right:4vw;top:30px;width:150px;height:150px;opacity:.15;stroke:#fff;fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
-.tyres{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:18px}.tc{display:flex;gap:14px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px}.tc svg{width:72px;flex:none}.tc b{font:900 15px Unbounded}.tc span{display:block;color:var(--mut);font-size:14px}
-@media(max-width:900px){.hero-in{grid-template-columns:1fr}.deco{display:none}}
-</style></head><body><svg width="0" height="0" style="position:absolute"><defs>
-<symbol id="i-tyre" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44"/><circle cx="50" cy="50" r="28"/><circle cx="50" cy="50" r="8"/><path d="M50 22V42M50 58V78M22 50H42M58 50H78M30 30L44 44M56 56L70 70M70 30L56 44M44 56L30 70"/></symbol>
-<symbol id="i-timer" viewBox="0 0 100 100"><circle cx="50" cy="56" r="36"/><path d="M40 10H60M50 10V20M50 56V34M50 56L66 64"/></symbol>
-<symbol id="i-track" viewBox="0 0 100 100"><path d="M18 62C8 40 30 22 52 28L80 34C92 38 88 56 74 60L52 66C38 70 44 86 30 84C20 82 20 70 18 62Z"/><path d="M52 28V16M46 22H58"/></symbol>
-<symbol id="i-weather" viewBox="0 0 100 100"><path d="M30 56a14 14 0 0 1 2-28 20 20 0 0 1 38 6 12 12 0 0 1 2 22z"/><path d="M34 70L28 86M52 70L46 86M70 70L64 86"/></symbol>
-<symbol id="i-flow" viewBox="0 0 100 100"><path d="M6 50H28M44 50H56M72 50H94M82 38L94 50L82 62"/><rect x="28" y="36" width="16" height="28" rx="4"/><rect x="56" y="36" width="16" height="28" rx="4"/></symbol></defs></svg>
-<header class="top"><nav class="nav"><div class="logo"><span>F1 DATA LAB</span></div><a href="#tyres">Tyres</a><a href="#pits">Pit stops</a><a href="#strategy">Strategy lab</a><a href="#weather">Weather</a><a href="#pipeline">Pipeline</a></nav>
-<div class="sub"><span><b id="yrs">-</b> &nbsp;|&nbsp; OpenF1 race data</span><span>Updated <b id="gen">-</b> &nbsp;<span class="pill" id="mode">LIVE DATA</span></span></div></header>
-<section class="hero"><div class="hero-in"><div><div class="bars"><i></i><i></i></div><h1>Race strategy<br>analytics</h1><p>How tyres, pit stops and weather shape a Grand Prix. Every number on this page comes from a validated ETL pipeline: extract, validate, clean, load, analyse.</p></div><div class="art"><svg class="car" viewBox="0 0 640 230" role="img" aria-label="Illustration of an open-wheel race car"><defs><linearGradient id="bd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff2d1f"/><stop offset="1" stop-color="#a30500"/></linearGradient></defs>
-<ellipse cx="330" cy="206" rx="280" ry="9" fill="#e10600" opacity=".28"/>
-<g class="lines" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".4"><line x1="6" y1="84" x2="66" y2="84" stroke-dasharray="30 30"/><line x1="0" y1="116" x2="50" y2="116" stroke-dasharray="30 30"/><line x1="12" y1="148" x2="62" y2="148" stroke-dasharray="30 30"/></g>
-<rect x="56" y="58" width="76" height="9" rx="2" fill="#f2f2f5"/><rect x="50" y="50" width="7" height="52" rx="2" fill="#e10600"/><path d="M92 67L102 108" stroke="#222" stroke-width="5"/>
-<path d="M82 118L130 106L220 98Q250 70 300 78L344 94L430 106L572 130L602 140V148L440 152L250 154L96 148Z" fill="url(#bd)"/><path d="M130 126L440 134" stroke="#fff" stroke-width="6" opacity=".9"/><path d="M200 124L330 120L350 144L210 148Z" fill="#6b0300" opacity=".55"/>
-<circle cx="312" cy="86" r="13" fill="#fff"/><path d="M301 84H325V91H301Z" fill="#111" opacity=".8"/><path d="M286 98Q312 56 352 94" fill="none" stroke="#d8d8de" stroke-width="5" stroke-linecap="round"/>
-<rect x="520" y="154" width="100" height="8" rx="2" fill="#f2f2f5"/><rect x="612" y="142" width="7" height="24" rx="2" fill="#e10600"/><path d="M560 140L548 154" stroke="#222" stroke-width="4"/>
-<circle cx="172" cy="150" r="52" fill="#101014"/><circle cx="172" cy="150" r="40" fill="none" stroke="#ff3b30" stroke-width="7"/><g class="spin"><circle cx="172" cy="150" r="24" fill="#2b2b35"/><path d="M172 128V172M150 150H194M156 134L188 166M188 134L156 166" stroke="#8a8a94" stroke-width="4"/></g><circle cx="172" cy="150" r="6" fill="#ccc"/>
-<circle cx="500" cy="158" r="44" fill="#101014"/><circle cx="500" cy="158" r="34" fill="none" stroke="#ff3b30" stroke-width="6"/><g class="spin"><circle cx="500" cy="158" r="20" fill="#2b2b35"/><path d="M500 140V176M482 158H518M487 145L513 171M513 145L487 171" stroke="#8a8a94" stroke-width="4"/></g><circle cx="500" cy="158" r="5" fill="#ccc"/></svg></div></div></section>
-<div class="kpis" id="kpis"></div><div class="check"></div>
-<section class="sec" id="tyres"><svg class="deco"><use href="#i-tyre"/></svg><h2>Tyre degradation</h2><p class="lead">How much slower a car gets on each compound as the tyres age. Tap a compound to show or hide it.</p>
-<div class="card"><div class="chips" id="chips"></div><div class="box"><canvas id="c-deg"></canvas></div><p class="take" id="t-deg"></p></div><div class="tyres" id="tyrecards"></div></section>
-<section class="sec alt" id="pits"><svg class="deco"><use href="#i-timer"/></svg><h2>Pit stop performance</h2><p class="lead">Median time spent in the pit lane, by team. Shorter is better.</p>
-<div class="card"><div id="pit"></div><button class="btn ghost" id="more">Show all</button></div></section>
-<section class="sec" id="strategy"><svg class="deco"><use href="#i-track"/></svg><h2>Strategy lab</h2><p class="lead">Compare real-world pace by number of stops, then build your own race strategy using the tyre curves measured from the data.</p>
-<div class="grid"><div class="card"><h3>Average pace by number of stops</h3><div class="box"><canvas id="c-stops"></canvas></div><p class="take" id="t-stops"></p></div>
-<div class="card"><h3>Strategy simulator</h3><div id="sim"></div></div></div></section>
-<section class="sec alt" id="weather"><svg class="deco"><use href="#i-weather"/></svg><h2>Weather and pace</h2><p class="lead">What track temperature and rain do to lap times and tyre choices.</p>
-<div class="grid"><div class="card"><h3>Pace vs track temperature</h3><div class="box"><canvas id="c-temp"></canvas></div><p class="take" id="t-temp"></p></div>
-<div class="card"><h3>Tyre choice: dry vs rain</h3><div class="box"><canvas id="c-rain"></canvas></div><p class="take" id="t-rain"></p></div></div></section>
-<section class="sec" id="pipeline"><svg class="deco"><use href="#i-flow"/></svg><h2>The pipeline</h2><p class="lead">The data behind this page, and how much of it survived validation.</p>
-<div class="flow"><div class="step"><b>01</b><h3>Extract</h3><p>Throttled, cached calls to the OpenF1 API.</p></div><div class="step"><b>02</b><h3>Validate</h3><p>Pydantic checks every record; bad rows are rejected.</p></div><div class="step"><b>03</b><h3>Clean</h3><p>pandas removes out-laps and safety-car laps, adds a fuel correction.</p></div><div class="step"><b>04</b><h3>Load</h3><p>SQLite database, rebuilt each run with no duplicates.</p></div><div class="step"><b>05</b><h3>Analyse</h3><p>EDA produces every figure shown here.</p></div></div>
-<div class="card" style="margin-top:18px"><h3>Data quality</h3><div class="q" id="q"></div><p class="take" id="t-q"></p></div></section>
-<div class="check"></div>
-<footer><div class="bars"><i></i><i></i></div><div class="cols"><div><h3>Explore</h3><a href="#tyres">Tyres</a><a href="#pits">Pit stops</a><a href="#strategy">Strategy lab</a></div>
-<div><h3>Data</h3><a href="https://openf1.org" target="_blank" rel="noopener">OpenF1 API</a><a href="data.json">Download data.json</a></div>
-<div><h3>About</h3><p>Student project: ETL + EDA pipeline built with Python, pandas, Pydantic and SQLite.</p><p>Unofficial. Not affiliated with Formula 1, the FIA or any team. The look is inspired by motorsport broadcasting; no official logos, photos or fonts are used.</p></div></div></footer>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script>
-const $=s=>document.querySelector(s),COL={SOFT:'#ff3b30',MEDIUM:'#ffd60a',HARD:'#e8e8ee',INTERMEDIATE:'#34c759',WET:'#0a84ff'};
-const TC={mercedes:'#27F4D2','red bull':'#3671C6',ferrari:'#E80020',mclaren:'#FF8000',aston:'#229971',alpine:'#FF87BC',williams:'#64C4FF','racing bulls':'#6692FF',sauber:'#52E252',haas:'#B6BABD',alphatauri:'#5E8FAA',alfa:'#C92D4B'};
-const tc=t=>{t=(t||'').toLowerCase();if(t==='rb')return'#6692FF';for(const k in TC)if(t.includes(k))return TC[k];return'#949498'};
-const ty=c=>`<span class="tyre" style="--c:${COL[c]||'#777'}">${c[0]}</span>`;
-/*PURE*/
-let M={},MAXAGE={};
-function fit(p){const n=p.length;let sx=0,sy=0,sxx=0,sxy=0;p.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y});const b=(n*sxy-sx*sy)/(n*sxx-sx*sx);return{a:(sy-b*sx)/n,b}}
-const stint=(c,len)=>len*M[c].a+M[c].b*len*(len+1)/2;
-function total(seq,stops,laps,loss){let prev=0,t=0;stops.concat([laps]).forEach((e,i)=>{t+=stint(seq[i],e-prev);prev=e});return t+loss*(seq.length-1)}
-const fits=(seq,stops,laps)=>stops.concat([laps]).every((e,i)=>e-(i?stops[i-1]:0)<=MAXAGE[seq[i]]);
-function best(laps,loss){const cs=Object.keys(M),out=[];
- for(const a of cs)for(const b of cs){if(a==b)continue;for(let s=6;s<=laps-6;s++)if(fits([a,b],[s],laps))out.push({seq:[a,b],stops:[s],t:total([a,b],[s],laps,loss)})}
- for(const a of cs)for(const b of cs)for(const c of cs){if(new Set([a,b,c]).size<2)continue;for(let s=6;s<=laps-12;s+=2)for(let e=s+6;e<=laps-6;e+=2)if(fits([a,b,c],[s,e],laps))out.push({seq:[a,b,c],stops:[s,e],t:total([a,b,c],[s,e],laps,loss)})}
- return out.sort((x,y)=>x.t-y.t)}
-/*END*/
-Chart.defaults.color='#949498';Chart.defaults.borderColor='#38383f';Chart.defaults.font.family="'Titillium Web',sans-serif";
-const base=(x,y,o={})=>({responsive:true,maintainAspectRatio:false,scales:{x:{title:{display:!!x,text:x},...(o.x||{})},y:{title:{display:!!y,text:y},...(o.y||{})}},plugins:{legend:{display:!!o.legend}}});
-function count(el,v,dec=0){const t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/900);el.textContent=(v*k).toLocaleString(undefined,{maximumFractionDigits:dec,minimumFractionDigits:dec});if(k<1)requestAnimationFrame(f)})(t0)}
-fetch('data.json').then(r=>r.json()).then(d=>{
- $('#yrs').textContent=d.years&&d.years.length?d.years[0]+' to '+d.years.at(-1)+' seasons':'Seasons';$('#gen').textContent=d.generated;
- if(d.demo){$('#mode').textContent='SAMPLE DATA';$('#mode').className='pill demo'}
- const h=d.health;[['Races',h.sessions],['Laps analysed',h.laps],['Tyre stints',h.stints],['Pit stops',h.pit],['Rows rejected',h.rejected],['Rejection rate %',h.rejection_rate]].forEach(([l,v])=>{const e=document.createElement('div');e.className='kpi';e.innerHTML=`<span>${l}</span><b>0</b>`;$('#kpis').append(e);count(e.querySelector('b'),v,l.includes('%')?2:0)});
- const names=Object.keys(d.degradation),dc=new Chart($('#c-deg'),{type:'line',data:{datasets:names.map(c=>({label:c,data:d.degradation[c].map(([x,y])=>({x,y})),borderColor:COL[c],backgroundColor:COL[c],pointRadius:2,tension:.3}))},options:base('Tyre age (laps)','Seconds slower than driver median',{x:{type:'linear'}})});
- names.forEach((c,i)=>{const b=document.createElement('button');b.className='chip';b.innerHTML=ty(c)+c;b.onclick=()=>{dc.setDatasetVisibility(i,!dc.isDatasetVisible(i));dc.update();b.classList.toggle('off')};$('#chips').append(b)});
- const sl=names.map(c=>{const p=d.degradation[c].filter(([x])=>x>=3);return[c,p.length>2?fit(p).b:0]}).sort((a,b)=>a[1]-b[1]);
- $('#t-deg').textContent=sl.length?`${sl[0][0]} wears slowest (${sl[0][1].toFixed(3)} s per lap); ${sl.at(-1)[0]} wears fastest (${sl.at(-1)[1].toFixed(3)} s per lap).`:'No tyre data yet.';
- const info={SOFT:'Most grip, wears fastest',MEDIUM:'Balanced grip and life',HARD:'Lasts longest, least grip',INTERMEDIATE:'For damp tracks; times fall as it dries',WET:'For heavy rain'};
- $('#tyrecards').innerHTML=names.map(c=>{const s=sl.find(x=>x[0]==c)[1];return `<div class="tc"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#101014"/><circle cx="50" cy="50" r="36" fill="none" stroke="${COL[c]||'#777'}" stroke-width="7"/><circle cx="50" cy="50" r="24" fill="#2b2b35"/><path d="M50 30V70M30 50H70M36 36L64 64M64 36L36 64" stroke="#8a8a94" stroke-width="4"/></svg><div><b>${c}</b><span>${info[c]||''}</span><span>Measured: ${s>=0?'+':''}${s.toFixed(3)} s/lap</span></div></div>`}).join('');
- const P=d.pit_by_team,lo=Math.min(...P.map(x=>x.median)),hi=Math.max(...P.map(x=>x.median));let all=false;
- const pr=()=>{$('#pit').innerHTML=P.slice(0,all?99:6).map((t,i)=>`<div class="row"><b>${i+1}</b><i style="background:${tc(t.team)}"></i><span>${t.team}</span><div class="bar"><u style="width:${30+70*(t.median-lo)/(hi-lo||1)}%;background:${tc(t.team)}"></u></div><b>${t.median.toFixed(2)}s</b><small>${t.n} stops</small></div>`).join('');$('#more').textContent=all?'Show less':'Show all';$('#more').hidden=P.length<=6};
- $('#more').onclick=()=>{all=!all;pr()};pr();
- const S=d.pace_by_stops,bs=[...S].sort((a,b)=>a.pace-b.pace)[0];
- new Chart($('#c-stops'),{type:'bar',data:{labels:S.map(x=>x.stops+(x.stops==1?' stop':' stops')+' (n='+x.n+')'),datasets:[{data:S.map(x=>x.pace),backgroundColor:S.map(x=>x===bs?'#e10600':'#5a5a66')}]},options:base('','Seconds per lap vs field')});
- if(bs)$('#t-stops').textContent=`${bs.stops}-stop runs had the best average pace. Strategy is mixed up with car and driver quality, so this shows correlation, not cause.`;
- const T=d.pace_by_temp;new Chart($('#c-temp'),{type:'line',data:{labels:T.map(x=>x.band+'°C'),datasets:[{data:T.map(x=>x.pace),borderColor:'#e10600',backgroundColor:'rgba(225,6,0,.2)',fill:true,tension:.3}]},options:base('Track temperature band','Seconds vs driver median')});
- if(T.length>1)$('#t-temp').textContent=`Between ${T[0].band}°C and ${T.at(-1).band}°C, average pace changes by ${(T.at(-1).pace-T[0].pace).toFixed(2)} s per lap.`;
- const R=d.compound_by_rain,rk=Object.keys(R);new Chart($('#c-rain'),{type:'bar',data:{labels:rk,datasets:Object.keys(COL).map(c=>({label:c,data:rk.map(k=>R[k][c]||0),backgroundColor:COL[c]}))},options:base('','% of laps',{legend:true,x:{stacked:true},y:{stacked:true,max:100}})});
- $('#t-rain').textContent=rk.length>1?'Intermediate and wet tyres replace the dry compounds once it rains.':'Not enough rain laps in the data to compare yet.';
- $('#q').innerHTML=`<u style="width:${100-h.rejection_rate}%"></u><i style="width:${h.rejection_rate}%;min-width:3px"></i>`;
- $('#t-q').textContent=`${h.rejected.toLocaleString()} rows were rejected by the Pydantic rules (${h.rejection_rate}% of ${(h.rejected+h.laps+h.stints+h.pit+h.weather).toLocaleString()}). Rejected rows are kept in a separate table with the reason.`;
- ['SOFT','MEDIUM','HARD'].forEach(c=>{if(d.degradation[c]&&d.degradation[c].length>3){M[c]=fit(d.degradation[c].filter(([x])=>x>=3));MAXAGE[c]=d.degradation[c].at(-1)[0]}});
- const cs=Object.keys(M),loss0=P.length?Math.round(P.map(x=>x.median).sort((a,b)=>a-b)[P.length>>1]):22;
- if(cs.length<2){$('#sim').innerHTML='<p class="warn">The simulator needs at least two dry compounds in the data. Run the pipeline first.</p>';return}
- const sel=(id,v)=>`<select id="${id}">${cs.map(c=>`<option ${c==v?'selected':''}>${c}</option>`).join('')}</select>`;
- $('#sim').innerHTML=`<div class="form"><div><label>Race laps</label><input id="laps" type="number" min="30" max="80" value="57"></div><div><label>Time lost per stop (s)</label><input id="loss" type="number" min="10" max="40" value="${loss0}"></div><div><label>Stops</label><select id="n"><option>1</option><option>2</option></select></div></div>
- <div class="form"><div><label>Stint 1</label>${sel('s1',cs[1]||cs[0])}</div><div><label>Stop on lap</label><input id="l1" type="number" value="20"></div><div><label>Stint 2</label>${sel('s2',cs.at(-1))}</div><div id="x2"><label>Stop on lap</label><input id="l2" type="number" value="40"></div><div id="x3"><label>Stint 3</label>${sel('s3',cs.at(-1))}</div></div>
- <div class="res" id="out"></div><p class="take" id="msg"></p><button class="btn" id="go">Find the best strategies</button><div id="top"></div>
- <p class="take">A simplified model: it uses the tyre curves above and ignores traffic, safety cars and fuel effects beyond the correction. Use it to compare ideas, not to predict a result.</p>`;
- const g=i=>$('#'+i);
- const calc=()=>{const laps=+g('laps').value,loss=+g('loss').value,n=+g('n').value;g('x2').hidden=g('x3').hidden=n==1;
-  const seq=[g('s1').value,g('s2').value].concat(n==2?[g('s3').value]:[]),stops=[+g('l1').value].concat(n==2?[+g('l2').value]:[]);
-  if(stops.some((s,i)=>s<2||s>=laps||(i&&s<=stops[i-1]+1))){g('out').textContent='';g('msg').innerHTML='<span class="warn">Check the stop laps: they must be in order and inside the race.</span>';return}
-  const t=total(seq,stops,laps,loss);g('out').textContent=(t>=0?'+':'')+t.toFixed(1)+' s';
-  let m=new Set(seq).size<2?'<span class="warn">Rule: a dry race needs at least two different compounds.</span> ':'';
-  if(!fits(seq,stops,laps))m+='<span class="warn">A stint is longer than the tyre ages seen in the data, so the estimate is an extrapolation.</span> ';
-  const b=best(laps,loss)[0];g('msg').innerHTML=m+(b?`Best found: ${b.seq.join(' / ')}, stops on lap ${b.stops.join(' and ')} (${(t-b.t>=0?'+':'')}${(t-b.t).toFixed(1)} s for yours vs the best).`:'')};
- ['laps','loss','n','s1','s2','s3','l1','l2'].forEach(i=>g(i).oninput=calc);calc();
- g('go').onclick=()=>{const b=best(+g('laps').value,+g('loss').value).filter((x,i,a)=>i==a.findIndex(y=>y.seq.join()==x.seq.join())).slice(0,5);
-  g('top').innerHTML=b.length?'<table><tr><th>#</th><th>Tyres</th><th>Stops on lap</th><th>Time</th></tr>'+b.map((x,i)=>`<tr><td>${i+1}</td><td>${x.seq.map(ty).join(' ')}</td><td>${x.stops.join(', ')}</td><td>${x.t.toFixed(1)} s</td></tr>`).join('')+'</table>':'<p class="warn">Not enough tyre data for this race length.</p>'};
-}).catch(()=>{$('#kpis').innerHTML='<p class="lead">data.json could not be loaded. Run the pipeline (etl.py then eda.py) and redeploy.</p>'});
-</script></body></html>
+<!DOCTYPE html>
+<!--
+  F1 Strategy Lab - dashboard shell.
+  All logic is in app.js, all styling in style.css. This page only provides the empty containers
+  that app.js fills in. There is no build step: Vercel serves these files as they are.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>F1 Strategy Lab</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js 4 from a CDN. To work fully offline, download it and point this src at the local copy. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="top">
+    <h1>F1 <span>Strategy Lab</span></h1>
+    <div id="selectors" class="selectors"></div>
+  </header>
+  <nav id="tabs" class="tabs"></nav>
+  <main id="main"><p class="muted">Loading&hellip;</p></main>
+  <div id="modal" class="modal" hidden></div>
+  <footer>
+    Unofficial project, not affiliated with Formula 1 or the FIA. Data: <a href="https://openf1.org">OpenF1</a>.
+    Every chart has an <b>Expand</b> button showing its data, method and the rows that were removed.
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
